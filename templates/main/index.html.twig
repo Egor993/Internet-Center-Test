@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="table">
+        {% set counter = 0 %}
+        <h4 class="caption">Список авторов</h4>
+        <hr>
+        <a href="/add_author"><button class="btn-primary">Добавить автора</button></a>
+        <table class="data">
+            <tbody>
+                <tr>
+                    <td class="val-2">
+                        <h4>№</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Автор</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Список книг</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Редактирвоать</h4>
+                    </td>
+                </tr>
+                {% for val in authors %}
+                <tr>
+                    {% set counter = counter + 1 %}
+                    <td class="val">{{ counter }}
+                    </td>
+                    <td class="val">{{ val.name }} {{ val.surname }}
+                    </td>
+                    <td class="val"><a href='/view?id={{ val.id }}'>Посмотреть</a>
+                    </td>
+                    <td class="val-2"><a href='/change_author?id={{ val.id }}'>Редактировать</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="table">
+    {% set counter = 0 %}
+        <h4 class="caption">Список книг, автор - {{ author_name }} {{ author_surname }}</h4>
+        <hr>
+        <a href="/addBook?id={{ id }}&author_name={{ author_name }}&author_surname={{ author_surname }}">
+            <button class="btn-success">Добавить книгу</button></a>
+        <table class="data">
+            <tbody>
+                <tr>
+                    <td class="val-2">
+                        <h4>№</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Книга</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Дата книги</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Редактировать</h4>
+                    </td>
+                    <td class="val-2">
+                        <h4>Удалить</h4>
+                    </td>
+                </tr>
+                {% for val in books %}
+                <tr>
+                    {% set counter = counter + 1 %}
+                    <td class="val">{{ counter }}
+                    </td>
+                    <td class="val">{{ val.BookName }}
+                    </td>
+                    <td class="val">{{ val.BookDate }}
+                    </td>
+                    <td class="val"><a href='/change_book?id={{ val.id }}&author_id={{ id }}'>Редактировать</a>
+                    </td>
+                    <td class="val-2"><a href='/delete_book?id={{ val.id }}&author_id={{ id }}'>Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
