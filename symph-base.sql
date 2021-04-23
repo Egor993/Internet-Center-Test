@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3307
--- Время создания: Апр 22 2021 г., 17:15
+-- Время создания: Апр 23 2021 г., 14:07
 -- Версия сервера: 8.0.19
 -- Версия PHP: 7.4.14
 
@@ -38,10 +38,10 @@ CREATE TABLE `authors` (
 --
 
 INSERT INTO `authors` (`id`, `name`, `surname`) VALUES
-(6, 'Стивен', 'Кинг'),
-(7, 'Дмитрий', 'Котеров'),
-(8, 'Джон', 'Толкин'),
-(9, 'Борис', 'Бажанов');
+(1, 'Дмитрий', 'Котеров'),
+(2, 'Стивен', 'Кинг'),
+(3, 'Джон', 'Толкин'),
+(4, 'Борис', 'Бажанов');
 
 -- --------------------------------------------------------
 
@@ -51,8 +51,7 @@ INSERT INTO `authors` (`id`, `name`, `surname`) VALUES
 
 CREATE TABLE `books` (
   `id` int NOT NULL,
-  `author_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `author_surname` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `author_id` int DEFAULT NULL,
   `book_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `book_date` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -61,15 +60,12 @@ CREATE TABLE `books` (
 -- Дамп данных таблицы `books`
 --
 
-INSERT INTO `books` (`id`, `author_name`, `author_surname`, `book_name`, `book_date`) VALUES
-(16, 'Стивен', 'Кинг', 'Зелёная миля', '1996'),
-(17, 'Стивен', 'Кинг', 'Мизери', '1987'),
-(18, 'Стивен', 'Кинг', 'Оно', '1986'),
-(19, 'Стивен', 'Кинг', 'Сияние', '1977'),
-(20, 'Дмитрий', 'Котеров', 'PHP7 в подлиннике', '2016'),
-(21, 'Джон', 'Толкин', 'Властелин колец', '1954'),
-(22, 'Джон', 'Толкин', 'Хоббит, или Туда и обратно', '1937'),
-(23, 'Борис', 'Бажанов', 'Я был секретарем Сталина', '1980');
+INSERT INTO `books` (`id`, `author_id`, `book_name`, `book_date`) VALUES
+(5, 1, 'PHP7 в подлиннике', '2016'),
+(7, 3, 'Властелин колец', '1978'),
+(9, 4, 'Я был секретарем Сталина', '1980'),
+(12, 2, 'Мизери', '1971'),
+(13, 2, 'Оно', '1977');
 
 -- --------------------------------------------------------
 
@@ -98,7 +94,18 @@ INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
 ('20210422100921', '2021-04-22 10:09:29'),
 ('20210422104343', '2021-04-22 10:43:48'),
 ('20210422104659', '2021-04-22 10:47:04'),
-('20210422105934', '2021-04-22 10:59:38');
+('20210422105934', '2021-04-22 10:59:38'),
+('20210423064123', '2021-04-23 06:41:30'),
+('20210423064527', '2021-04-23 06:45:40'),
+('20210423064640', '2021-04-23 06:46:46'),
+('20210423064834', '2021-04-23 06:48:39'),
+('20210423065225', '2021-04-23 06:52:32'),
+('20210423065545', '2021-04-23 06:55:50'),
+('20210423065831', '2021-04-23 06:58:35'),
+('20210423070005', '2021-04-23 07:00:09'),
+('20210423070347', '2021-04-23 07:03:52'),
+('20210423071057', '2021-04-23 07:11:02'),
+('20210423072309', '2021-04-23 07:23:15');
 
 --
 -- Индексы сохранённых таблиц
@@ -114,7 +121,8 @@ ALTER TABLE `authors`
 -- Индексы таблицы `books`
 --
 ALTER TABLE `books`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `IDX_4A1B2A92F675F31B` (`author_id`);
 
 --
 -- Индексы таблицы `migration_versions`
@@ -130,13 +138,23 @@ ALTER TABLE `migration_versions`
 -- AUTO_INCREMENT для таблицы `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT для таблицы `books`
 --
 ALTER TABLE `books`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `books`
+--
+ALTER TABLE `books`
+  ADD CONSTRAINT `FK_4A1B2A92F675F31B` FOREIGN KEY (`author_id`) REFERENCES `authors` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

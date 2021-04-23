@@ -18,14 +18,9 @@ class Books
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\ManyToOne(targetEntity=Authors::class, inversedBy="Books")
      */
-    private $authorName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $authorSurname;
+    private $author;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -42,26 +37,14 @@ class Books
         return $this->id;
     }
 
-    public function getAuthorName(): ?string
+    public function getAuthor(): ?Authors
     {
-        return $this->authorName;
+        return $this->author;
     }
 
-    public function setAuthorName(?string $authorName): self
+    public function setAuthor(?Authors $author): self
     {
-        $this->authorName = $authorName;
-
-        return $this;
-    }
-
-    public function getAuthorSurname(): ?string
-    {
-        return $this->authorSurname;
-    }
-
-    public function setAuthorSurname(?string $authorSurname): self
-    {
-        $this->authorSurname = $authorSurname;
+        $this->author = $author;
 
         return $this;
     }

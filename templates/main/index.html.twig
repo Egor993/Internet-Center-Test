@@ -28,9 +28,9 @@
                     </td>
                     <td class="val">{{ val.name }} {{ val.surname }}
                     </td>
-                    <td class="val"><a href='/view?id={{ val.id }}'>Посмотреть</a>
+                    <td class="val"><a href='/view?author_id={{ val.id }}'>Посмотреть</a>
                     </td>
-                    <td class="val-2"><a href='/change_author?id={{ val.id }}'>Редактировать</a>
+                    <td class="val-2"><a href='/change_author?author_id={{ val.id }}'>Редактировать</a>
                     </td>
                 </tr>
                 {% endfor %}

@@ -2,9 +2,9 @@
 {% block body %}
     <div class="table">
     {% set counter = 0 %}
-        <h4 class="caption">Список книг, автор - {{ author_name }} {{ author_surname }}</h4>
+        <h4 class="caption">Список книг, автор - {{ author.name }} {{ author.surname }}</h4>
         <hr>
-        <a href="/addBook?id={{ id }}&author_name={{ author_name }}&author_surname={{ author_surname }}">
+        <a href="/addBook?author_id={{ author_id }}">
             <button class="btn-success">Добавить книгу</button></a>
         <table class="data">
             <tbody>
@@ -30,13 +30,13 @@
                     {% set counter = counter + 1 %}
                     <td class="val">{{ counter }}
                     </td>
-                    <td class="val">{{ val.BookName }}
+                    <td class="val">{{ val.bookName }}
                     </td>
-                    <td class="val">{{ val.BookDate }}
+                    <td class="val">{{ val.bookDate }}
                     </td>
-                    <td class="val"><a href='/change_book?id={{ val.id }}&author_id={{ id }}'>Редактировать</a>
+                    <td class="val"><a href='/change_book?book_id={{ val.id }}'>Редактировать</a>
                     </td>
-                    <td class="val-2"><a href='/delete_book?id={{ val.id }}&author_id={{ id }}'>Удалить</a>
+                    <td class="val-2"><a href='/delete_book?book_id={{ val.id }}'>Удалить</a>
                     </td>
                 </tr>
                 {% endfor %}

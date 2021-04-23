@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AuthorsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -26,6 +28,16 @@ class Authors
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $surname;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Books::class, mappedBy="author")
+     */
+    private $Books;
+
+    public function __construct()
+    {
+        $this->Books = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +64,36 @@ class Authors
     public function setSurname(?string $surname): self
     {
         $this->surname = $surname;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Books[]
+     */
+    public function getBooks(): Collection
+    {
+        return $this->Books;
+    }
+
+    public function addBook(Books $book): self
+    {
+        if (!$this->Books->contains($book)) {
+            $this->Books[] = $book;
+            $book->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Books $book): self
+    {
+        if ($this->Books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getAuthor() === $this) {
+                $book->setAuthor(null);
+            }
+        }
 
         return $this;
     }
