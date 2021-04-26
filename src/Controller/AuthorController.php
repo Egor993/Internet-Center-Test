@@ -39,11 +39,20 @@ class AuthorController extends AbstractController
         ->add('surname', TextType::class, array('label' => 'Фамилия'));
         $author = new Authors;
         // Создаем форму
-        if($form_add->create($request, $form, $author)){
-            return $this->redirect('/');
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $form_add->create($form, $author);
+            if($form_add->error) {
+                return $this->render('addAuthor/index.html.twig', array(
+                    'form' => $form->createView(), 'error' => $form_add->error,
+                ));
+            }
+            else {
+                return $this->redirect('/');
+            }
         }
         return $this->render('addAuthor/index.html.twig', array(
-            'form' => $form->createView(),
+            'form' => $form->createView(), 'error' => $form_add->error,
         ));
     }
 
@@ -61,11 +70,20 @@ class AuthorController extends AbstractController
         $form->add('name', TextType::class, array('label' => 'Имя', 'attr' => array('value' => $author->getName())))
         ->add('surname', TextType::class, array('label' => 'Фамилия', 'attr' => array('value' => $author->getSurname())));
         // Создаем форму
-        if($form_add->create($request, $form, $author)){
-            return $this->redirect('/');
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $form_add->create($form, $author);
+            if($form_add->error) {
+                return $this->render('changeAuthor/index.html.twig', array(
+                    'form' => $form->createView(), 'error' => $form_add->error,
+                ));
+            }
+            else {
+                return $this->redirect('/');
+            }
         }
         return $this->render('changeAuthor/index.html.twig', array(
-            'form' => $form->createView(), 
+            'form' => $form->createView(), 'error' => $form_add->error,
         ));
     }
 }

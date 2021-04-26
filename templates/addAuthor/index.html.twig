@@ -7,4 +7,9 @@
     {{ form_widget(form) }}
     <button type='submit' class='btn btn-primary'>Отправить</button>
   {{ form_end(form)}}
+  {% if error %}
+  <div class="alert alert-danger" role="alert">
+    {{error}}
+  </div>
+  {% endif %}
 {% endblock %}

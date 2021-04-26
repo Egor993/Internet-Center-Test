@@ -13,23 +13,25 @@ use App\Entity\Books;
 
 class FormBookService extends AbstractController
 {
+
+    public $error = null;
  
-    public function create($request, $form, $book, $author = null)
+    public function create($form, $book, $author = null)
     {
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            // Устанвливаем данные из формы
-            $data = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            if($author) {
-                $book->setAuthor($author);
-            }
-            $book->setBookName($data['name']);
-            $book->setBookDate($data['date']);
-            $em->persist($book);
-            $em->flush();
-            return true;
+        // Устанвливаем данные из формы
+        $data = $form->getData();
+        if($data['date'] > 2100) {
+            return $this->error = 'Слишком длинная дата';
         }
+        $em = $this->getDoctrine()->getManager();
+        if($author) {
+            $book->setAuthor($author);
+        }
+        $book->setBookName($data['name']);
+        $book->setBookDate($data['date']);
+        $em->persist($book);
+        $em->flush();
+        return true;
     }
 
 }

@@ -43,11 +43,20 @@ class BookController extends AbstractController
         $form->add('name', TextType::class, array('label' => 'Название книги', 'attr' => array('value' => $book->getBookName())))
         ->add('date', TextType::class, array('label' => 'Дата выхода книги', 'attr' => array('value' => $book->getBookDate())));
         // Создаем форму
-        if($form_add->create($request, $form, $book)){
-            return $this->redirect("/view?author_id=$author_id");
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $form_add->create($form, $book);
+            if($form_add->error) {
+                return $this->render('changeBook/index.html.twig', array(
+                    'form' => $form->createView(), 'error' => $form_add->error,
+                ));
+            }
+            else {
+                return $this->redirect("/view?author_id=$author_id");
+            }
         }
         return $this->render('changeBook/index.html.twig', array(
-            'form' => $form->createView(), 
+            'form' => $form->createView(), 'error' => $form_add->error,
         ));
     }
 
@@ -65,11 +74,20 @@ class BookController extends AbstractController
         $form->add('name', TextType::class, array('label' => 'Нзвание книги'))
         ->add('date', TextType::class, array('label' => 'Дата выхода'));
         //Создаем форму
-        if($form_add->create($request, $form, $book, $author)){
-            return $this->redirect("/view?author_id=$author_id");
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            $form_add->create($form, $book, $author);
+            if($form_add->error){
+                return $this->render('addBook/index.html.twig', array(
+                    'form' => $form->createView(), 'error' => $form_add->error,
+                ));
+            }
+            else{
+                return $this->redirect("/view?author_id=$author_id");
+            }
         }
         return $this->render('addBook/index.html.twig', array(
-            'form' => $form->createView()
+            'form' => $form->createView(), 'error' => $form_add->error,
         ));
     }
 

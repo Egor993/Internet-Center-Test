@@ -13,20 +13,21 @@ use App\Entity\Books;
 
 class FormAuthorService extends AbstractController
 {
+    public $error = null;
  
-    public function create($request, $form, $author)
+    public function create($form, $author)
     {
-        $form->handleRequest($request);
-        if ($form->isSubmitted()) {
-            // Устанвливаем данные из формы
-            $data = $form->getData();
-            $em = $this->getDoctrine()->getManager();
-            $author->setName($data['name']);
-            $author->setSurname($data['surname']);
-            $em->persist($author);
-            $em->flush();
-            return true;
+        // Устанвливаем данные из формы
+        $data = $form->getData();
+        if(strlen($data['surname']) < 3) {
+            return $this->error = 'Слишком короткая фамилия';
         }
+        $em = $this->getDoctrine()->getManager();
+        $author->setName($data['name']);
+        $author->setSurname($data['surname']);
+        $em->persist($author);
+        $em->flush();
+        return true;
     }
 
 }

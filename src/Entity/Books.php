@@ -23,12 +23,12 @@ class Books
     private $author;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $bookName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="integer", length=255, nullable=false)
      */
     private $bookDate;
 
@@ -42,11 +42,10 @@ class Books
         return $this->author;
     }
 
-    public function setAuthor(?Authors $author): self
+    public function setAuthor(?Authors $author): void
     {
         $this->author = $author;
 
-        return $this;
     }
 
     public function getBookName(): ?string
@@ -54,22 +53,20 @@ class Books
         return $this->bookName;
     }
 
-    public function setBookName(?string $bookName): self
+    public function setBookName(?string $bookName): void
     {
         $this->bookName = $bookName;
 
-        return $this;
     }
 
-    public function getBookDate(): ?string
+    public function getBookDate(): ?int
     {
         return $this->bookDate;
     }
 
-    public function setBookDate(?string $bookDate): self
+    public function setBookDate(?int $bookDate): void
     {
         $this->bookDate = $bookDate;
 
-        return $this;
     }
 }

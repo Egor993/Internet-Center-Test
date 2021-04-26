@@ -20,12 +20,12 @@ class Authors
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $surname;
 
@@ -49,11 +49,9 @@ class Authors
         return $this->name;
     }
 
-    public function setName(?string $name): self
+    public function setName(?string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getSurname(): ?string
@@ -61,11 +59,10 @@ class Authors
         return $this->surname;
     }
 
-    public function setSurname(?string $surname): self
+    public function setSurname(?string $surname): void
     {
         $this->surname = $surname;
 
-        return $this;
     }
 
     /**
