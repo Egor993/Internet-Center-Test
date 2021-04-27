@@ -16,14 +16,28 @@ class AuthorController extends AbstractController
     /**
      * @Route("/", name="index")
      */
-    public function index()
+    public function index(Request $request)
     {
-        //Получаем список авторов
-        $authors = $this->getDoctrine()
-        ->getRepository(Author::class)->findAll();
-
+        //Создаем форму поиска
+        $form = $this->createForm(TestFormType::class)->add('search', TextType::class, array('label' => 'Поиск автора'));
+        $data = $form->handleRequest($request)->getData();
+        if ($form->isSubmitted()) {
+            if(!(preg_match('/.*\s/', $data['search'], $name)) and (!(preg_match('/.*/', $data['search'], $name)))){
+                $name = [0 => ''];
+            }
+            if(!(preg_match('/\s.*/', $data['search'], $surname)) and (!(preg_match('/.*/', $data['search'], $surname)))){
+                $surname = [0 => ''];
+            }
+            $authors = $this->getDoctrine()
+            ->getRepository(Author::class)->findAuthor(trim($name[0]), trim($surname[0]));
+        }
+        else {
+            //Получаем список всех авторов
+            $authors = $this->getDoctrine()
+            ->getRepository(Author::class)->findAll();
+        }
         return $this->render('main/index.html.twig', array(
-            'authors' => $authors,
+            'authors' => $authors, 'form' => $form->createView()
         ));
     }
 

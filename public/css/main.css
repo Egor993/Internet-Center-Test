@@ -59,3 +59,8 @@ table {
 .form-inline li{
     font-size: 20px;
 }
+
+.search .col-form-label{
+
+    width: 500px;
+}

@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-
+<div class="search">
+    {{ form_start(form)}}
+        {{ form_widget(form) }}
+        <button type='submit' class='btn btn-primary'>Искать</button>
+     {{ form_end(form)}}
+</div>
     <div class="table">
         {% set counter = 0 %}
         <h4 class="caption">Список авторов</h4>

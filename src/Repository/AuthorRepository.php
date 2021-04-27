@@ -19,6 +19,21 @@ class AuthorRepository extends ServiceEntityRepository
         parent::__construct($registry, Author::class);
     }
 
+        public function findAuthor($name, $surname)
+    {
+            $entityManager = $this->getEntityManager();
+            $query = $entityManager->createQuery(
+            'SELECT a
+            FROM App\Entity\Author a
+            WHERE a.name LIKE :authName OR a.surname LIKE :authSurname
+            '
+            )->setParameter('authName', '%'.$name.'%')->setParameter('authSurname', '%'.$surname.'%');
+
+
+        // returns an array of Product objects
+        return $query->getResult();
+    }
+
     // /**
     //  * @return Author[] Returns an array of Author objects
     //  */
