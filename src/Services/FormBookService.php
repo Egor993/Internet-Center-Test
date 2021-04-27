@@ -10,18 +10,15 @@ use App\Form\TestFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\Authors;
 use App\Entity\Books;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class FormBookService extends AbstractController
 {
-
-    public $error = null;
- 
-    public function create($form, $book, $author = null)
+    public function create(array $data, object  $book, object $author = null)
     {
         // Устанвливаем данные из формы
-        $data = $form->getData();
         if($data['date'] > 2100) {
-            return $this->error = 'Слишком длинная дата';
+            throw new Exception();
         }
         $em = $this->getDoctrine()->getManager();
         if($author) {

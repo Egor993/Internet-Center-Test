@@ -10,17 +10,15 @@ use App\Form\TestFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\Authors;
 use App\Entity\Books;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class FormAuthorService extends AbstractController
 {
-    public $error = null;
- 
-    public function create($form, $author)
+    public function create(array $data, object $author)
     {
         // Устанвливаем данные из формы
-        $data = $form->getData();
-        if(strlen($data['surname']) < 3) {
-            return $this->error = 'Слишком короткая фамилия';
+        if(mb_strlen($data['surname']) < 3) {
+            throw new Exception();
         }
         $em = $this->getDoctrine()->getManager();
         $author->setName($data['name']);

@@ -8,34 +8,35 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\TestFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use App\Entity\Books;
-use App\Entity\Authors;
+use App\Entity\Book;
+use App\Entity\Author;
 use App\Services\FormBookService;
+use Symfony\Component\Config\Definition\Exception\Exception;
 
 class BookController extends AbstractController
 {
     /**
-     * @Route("/view/{authorid}", name="viewbooks")
+     * @Route("/view/{authorId}", name="viewbooks")
      */
-    public function index(int $authorid, Request $request)
+    public function index(int $authorId, Request $request)
     {
-        $author = $this->getDoctrine()->getRepository(Authors::class)->find($authorid);
-        $books = $this->getDoctrine()->getRepository(Books::class)->findBy(['author' => $authorid]);
+        $author = $this->getDoctrine()->getRepository(Author::class)->find($authorId);
+        $books = $this->getDoctrine()->getRepository(Book::class)->findBy(['author' => $authorId]);
         return $this->render('view/index.html.twig', array(
-            'books' => $books, 'author' => $author, 'authorid' => $authorid,
+            'books' => $books, 'author' => $author, 'authorId' => $authorId,
         ));
     }
 
     /**
-     * @Route("/changebook/{bookid}", name="changebook")
+     * @Route("/changebook/{bookId}", name="changebook")
      */
-    public function change(int $bookid, Request $request, FormBookService $formAdd)
+    public function change(int $bookId, Request $request, FormBookService $formAdd)
     {
         // Получаем данные книги
         $book = $this->getDoctrine()
-        ->getRepository(Books::class)->find($bookid);
+        ->getRepository(Book::class)->find($bookId);
         // Получаем id автора для редиректа
-        $authorid = $book->getAuthor($bookid)->getId();
+        $authorId = $book->getAuthor($bookId)->getId();
         $form = $this->createForm(TestFormType::class);
         // Создаем поля для формы
         $form->add('name', TextType::class, array('label' => 'Название книги', 'attr' => array('value' => $book->getBookName())))
@@ -43,29 +44,29 @@ class BookController extends AbstractController
         // Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $formAdd->create($form, $book);
-            if($formAdd->error) {
-                return $this->render('changeBook/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => $formAdd->error,
-                ));
+            try {
+                $formAdd->create($form->getData(), $book);
+                return $this->redirect("/view/$authorId");    
             }
-            else {
-                return $this->redirect("/view/$authorid");
+            catch(\Exception $e) {
+                return $this->render('changeBook/index.html.twig', array(
+                    'form' => $form->createView(), 'error' => 'Слишком длинная дата'
+                ));
             }
         }
         return $this->render('changeBook/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $formAdd->error,
+            'form' => $form->createView(), 'error' => null
         ));
     }
 
      /**
-     * @Route("/addbook/{authorid}", name="addbook")
+     * @Route("/addbook/{authorId}", name="addbook")
      */
-    public function add(int $authorid, Request $request, FormBookService $formAdd)
+    public function add(int $authorId, Request $request, FormBookService $formAdd)
     {
         // Получаем данные автора
-        $author = $this->getDoctrine()->getRepository(Authors::class)->find($authorid);
-        $book = new Books;
+        $author = $this->getDoctrine()->getRepository(Author::class)->find($authorId);
+        $book = new Book;
         $form = $this->createForm(TestFormType::class);
         // Создаем поля для формы
         $form->add('name', TextType::class, array('label' => 'Нзвание книги'))
@@ -73,34 +74,34 @@ class BookController extends AbstractController
         //Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $formAdd->create($form, $book, $author);
-            if($formAdd->error) {
-                return $this->render('addBook/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => $formAdd->error,
-                ));
+            try {
+                $formAdd->create($form->getData(), $book, $author);
+                return $this->redirect("/view/$authorId");
             }
-            else{
-                return $this->redirect("/view/$authorid");
+            catch(\Exception $e) {
+            return $this->render('addBook/index.html.twig', array(
+                'form' => $form->createView(), 'error' => 'Слишком длинная дата'
+            ));
             }
         }
         return $this->render('addBook/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $formAdd->error,
+            'form' => $form->createView(), 'error' => $formAdd->error, 'authorId' => $authorId
         ));
     }
 
     /**
-     * @Route("/deletebook/{bookid}", name="deletebook")
+     * @Route("/deletebook/{bookId}", name="deletebook")
      */
-    public function delete(int $bookid, Request $request)
+    public function delete(int $bookId, Request $request)
     {
         // Получаем данные книги и удаляем ее
         $book = $this->getDoctrine()
-        ->getRepository(Books::class)->find($bookid);
+        ->getRepository(Book::class)->find($bookId);
         $em = $this->getDoctrine()->getManager();
         $em->remove($book);
         $em->flush();
         // Отправляем на пред страницу
-        $authorid = $book->getAuthor($bookid)->getId();
-        return $this->redirect("/view/$authorid");
+        $authorId = $book->getAuthor($bookId)->getId();
+        return $this->redirect("/view/$authorId");
     }
 }
