@@ -85,7 +85,7 @@ class BookController extends AbstractController
             }
         }
         return $this->render('addBook/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $formAdd->error, 'authorId' => $authorId
+            'form' => $form->createView(), 'error' => null, 'authorId' => $authorId
         ));
     }
 
