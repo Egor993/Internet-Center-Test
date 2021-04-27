@@ -4,7 +4,7 @@
     {% set counter = 0 %}
         <h4 class="caption">Список книг, автор - {{ author.name }} {{ author.surname }}</h4>
         <hr>
-        <a href="/addBook?author_id={{ author_id }}">
+        <a href="/addbook/{{ author_id }}">
             <button class="btn-success">Добавить книгу</button></a>
         <table class="data">
             <tbody>

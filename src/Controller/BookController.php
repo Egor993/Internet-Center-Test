@@ -61,12 +61,12 @@ class BookController extends AbstractController
     }
 
      /**
-     * @Route("/addBook", name="add_book")
+     * @Route("/addbook/{$author_id}", name="add_book")
      */
-    public function add(Request $request, FormBookService $form_add)
+    public function add(int $author_id, Request $request, FormBookService $form_add)
     {
         // Получаем данные автора
-        $author_id = $request->query->get('author_id');
+        // $author_id = $request->query->get('author_id');
         $author = $this->getDoctrine()->getRepository(Authors::class)->find($author_id);
         $book = new Books;
         $form = $this->createForm(TestFormType::class);
@@ -83,7 +83,7 @@ class BookController extends AbstractController
                 ));
             }
             else{
-                return $this->redirect("/view?author_id=$author_id");
+                return $this->redirect("/view?author_id=".$author_id);
             }
         }
         return $this->render('addBook/index.html.twig', array(
