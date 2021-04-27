@@ -4,7 +4,7 @@
     {% set counter = 0 %}
         <h4 class="caption">Список книг, автор - {{ author.name }} {{ author.surname }}</h4>
         <hr>
-        <a href="/addbook/{{ author_id }}">
+        <a href="/addbook/{{ authorid }}">
             <button class="btn-success">Добавить книгу</button></a>
         <table class="data">
             <tbody>
@@ -34,9 +34,9 @@
                     </td>
                     <td class="val">{{ val.bookDate }}
                     </td>
-                    <td class="val"><a href='/change_book?book_id={{ val.id }}'>Редактировать</a>
+                    <td class="val"><a href='/changebook/{{ val.id }}'>Редактировать</a>
                     </td>
-                    <td class="val-2"><a href='/delete_book?book_id={{ val.id }}'>Удалить</a>
+                    <td class="val-2"><a href='/deletebook/{{ val.id }}'>Удалить</a>
                     </td>
                 </tr>
                 {% endfor %}

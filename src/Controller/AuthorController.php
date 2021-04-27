@@ -29,9 +29,9 @@ class AuthorController extends AbstractController
     }
 
     /**
-     * @Route("/add_author", name="add_author")
+     * @Route("/addauthor", name="addauthor")
      */
-    public function add(Request $request, FormAuthorService $form_add )
+    public function add(Request $request, FormAuthorService $formAdd )
     {
         // Создаем поля
         $form = $this->createForm(TestFormType::class);
@@ -41,10 +41,10 @@ class AuthorController extends AbstractController
         // Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $form_add->create($form, $author);
-            if($form_add->error) {
+            $formAdd->create($form, $author);
+            if($formAdd->error) {
                 return $this->render('addAuthor/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => $form_add->error,
+                    'form' => $form->createView(), 'error' => $formAdd->error,
                 ));
             }
             else {
@@ -52,19 +52,18 @@ class AuthorController extends AbstractController
             }
         }
         return $this->render('addAuthor/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $form_add->error,
+            'form' => $form->createView(), 'error' => $formAdd->error,
         ));
     }
 
     /**
-     * @Route("/change_author", name="change_author")
+     * @Route("/changeauthor/{authorid}", name="changeauthor")
      */
-    public function change(Request $request, FormAuthorService $form_add )
+    public function change(int $authorid, Request $request, FormAuthorService $formAdd )
     {
         // Получаем данные автора и создаем форму
-        $author_id = $request->query->get('author_id');
         $author = $this->getDoctrine()
-        ->getRepository(Authors::class)->find($author_id);
+        ->getRepository(Authors::class)->find($authorid);
         $form = $this->createForm(TestFormType::class);
         // Создаем поля для формы
         $form->add('name', TextType::class, array('label' => 'Имя', 'attr' => array('value' => $author->getName())))
@@ -72,10 +71,10 @@ class AuthorController extends AbstractController
         // Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $form_add->create($form, $author);
-            if($form_add->error) {
+            $formAdd->create($form, $author);
+            if($formAdd->error) {
                 return $this->render('changeAuthor/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => $form_add->error,
+                    'form' => $form->createView(), 'error' => $formAdd->error,
                 ));
             }
             else {
@@ -83,7 +82,7 @@ class AuthorController extends AbstractController
             }
         }
         return $this->render('changeAuthor/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $form_add->error,
+            'form' => $form->createView(), 'error' => $formAdd->error,
         ));
     }
 }

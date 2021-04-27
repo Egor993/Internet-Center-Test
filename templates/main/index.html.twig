@@ -4,7 +4,7 @@
         {% set counter = 0 %}
         <h4 class="caption">Список авторов</h4>
         <hr>
-        <a href="/add_author"><button class="btn-primary">Добавить автора</button></a>
+        <a href="/addauthor"><button class="btn-primary">Добавить автора</button></a>
         <table class="data">
             <tbody>
                 <tr>
@@ -28,9 +28,9 @@
                     </td>
                     <td class="val">{{ val.name }} {{ val.surname }}
                     </td>
-                    <td class="val"><a href='/view?author_id={{ val.id }}'>Посмотреть</a>
+                    <td class="val"><a href='/view/{{ val.id }}'>Посмотреть</a>
                     </td>
-                    <td class="val-2"><a href='/change_author?author_id={{ val.id }}'>Редактировать</a>
+                    <td class="val-2"><a href='/changeauthor/{{ val.id }}'>Редактировать</a>
                     </td>
                 </tr>
                 {% endfor %}

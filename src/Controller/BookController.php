@@ -15,29 +15,27 @@ use App\Services\FormBookService;
 class BookController extends AbstractController
 {
     /**
-     * @Route("/view", name="view_books")
+     * @Route("/view/{authorid}", name="viewbooks")
      */
-    public function index(Request $request)
+    public function index(int $authorid, Request $request)
     {
-        $author_id = $request->query->get('author_id');
-        $author = $this->getDoctrine()->getRepository(Authors::class)->find($author_id);
-        $books = $this->getDoctrine()->getRepository(Books::class)->findBy(['author' => $author_id]);
+        $author = $this->getDoctrine()->getRepository(Authors::class)->find($authorid);
+        $books = $this->getDoctrine()->getRepository(Books::class)->findBy(['author' => $authorid]);
         return $this->render('view/index.html.twig', array(
-            'books' => $books, 'author' => $author, 'author_id' => $author_id,
+            'books' => $books, 'author' => $author, 'authorid' => $authorid,
         ));
     }
 
     /**
-     * @Route("/change_book", name="change_book")
+     * @Route("/changebook/{bookid}", name="changebook")
      */
-    public function change(Request $request, FormBookService $form_add)
+    public function change(int $bookid, Request $request, FormBookService $formAdd)
     {
         // Получаем данные книги
-        $book_id = $request->query->get('book_id');
         $book = $this->getDoctrine()
-        ->getRepository(Books::class)->find($book_id);
+        ->getRepository(Books::class)->find($bookid);
         // Получаем id автора для редиректа
-        $author_id = $book->getAuthor($book_id)->getId();
+        $authorid = $book->getAuthor($bookid)->getId();
         $form = $this->createForm(TestFormType::class);
         // Создаем поля для формы
         $form->add('name', TextType::class, array('label' => 'Название книги', 'attr' => array('value' => $book->getBookName())))
@@ -45,29 +43,28 @@ class BookController extends AbstractController
         // Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $form_add->create($form, $book);
-            if($form_add->error) {
+            $formAdd->create($form, $book);
+            if($formAdd->error) {
                 return $this->render('changeBook/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => $form_add->error,
+                    'form' => $form->createView(), 'error' => $formAdd->error,
                 ));
             }
             else {
-                return $this->redirect("/view?author_id=$author_id");
+                return $this->redirect("/view/$authorid");
             }
         }
         return $this->render('changeBook/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $form_add->error,
+            'form' => $form->createView(), 'error' => $formAdd->error,
         ));
     }
 
      /**
-     * @Route("/addbook/{author_id}", name="add_book")
+     * @Route("/addbook/{authorid}", name="addbook")
      */
-    public function add(int $author_id, Request $request, FormBookService $form_add)
+    public function add(int $authorid, Request $request, FormBookService $formAdd)
     {
         // Получаем данные автора
-        // $author_id = $request->query->get('author_id');
-        $author = $this->getDoctrine()->getRepository(Authors::class)->find($author_id);
+        $author = $this->getDoctrine()->getRepository(Authors::class)->find($authorid);
         $book = new Books;
         $form = $this->createForm(TestFormType::class);
         // Создаем поля для формы
@@ -76,35 +73,34 @@ class BookController extends AbstractController
         //Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
-            $form_add->create($form, $book, $author);
-            if($form_add->error){
+            $formAdd->create($form, $book, $author);
+            if($formAdd->error) {
                 return $this->render('addBook/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => $form_add->error,
+                    'form' => $form->createView(), 'error' => $formAdd->error,
                 ));
             }
             else{
-                return $this->redirect("/view?author_id=".$author_id);
+                return $this->redirect("/view/$authorid");
             }
         }
         return $this->render('addBook/index.html.twig', array(
-            'form' => $form->createView(), 'error' => $form_add->error,
+            'form' => $form->createView(), 'error' => $formAdd->error,
         ));
     }
 
     /**
-     * @Route("/delete_book", name="delete_book")
+     * @Route("/deletebook/{bookid}", name="deletebook")
      */
-    public function delete(Request $request)
+    public function delete(int $bookid, Request $request)
     {
         // Получаем данные книги и удаляем ее
-        $book_id = $request->query->get('book_id');
         $book = $this->getDoctrine()
-        ->getRepository(Books::class)->find($book_id);
+        ->getRepository(Books::class)->find($bookid);
         $em = $this->getDoctrine()->getManager();
         $em->remove($book);
         $em->flush();
         // Отправляем на пред страницу
-        $author_id = $book->getAuthor($book_id)->getId();
-        return $this->redirect("/view?author_id=$author_id");
+        $authorid = $book->getAuthor($bookid)->getId();
+        return $this->redirect("/view/$authorid");
     }
 }
