@@ -61,7 +61,7 @@ class BookController extends AbstractController
     }
 
      /**
-     * @Route("/addbook/{$author_id}", name="add_book")
+     * @Route("/addbook/{author_id}", name="add_book")
      */
     public function add(int $author_id, Request $request, FormBookService $form_add)
     {
