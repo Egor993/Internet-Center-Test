@@ -10,24 +10,29 @@ use App\Form\TestFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\Author;
 use App\Services\FormAuthorService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthorController extends AbstractController
 {
     /**
      * @Route("/", name="index")
      */
+    // Отображает главную страницу со списком авторов
     public function index(Request $request)
     {
-        //Создаем форму поиска
+        // Создаем форму поиска
         $form = $this->createForm(TestFormType::class)->add('search', TextType::class, array('label' => 'Поиск автора'));
         $data = $form->handleRequest($request)->getData();
         if ($form->isSubmitted()) {
+            // Если введены данные до пробела, или вообще не введены - заполняем поле name
             if(!(preg_match('/.*\s/', $data['search'], $name)) and (!(preg_match('/.*/', $data['search'], $name)))){
                 $name = [0 => ''];
             }
+            // Если введены данные после пробела, или вообще не введены - заполняем surname
             if(!(preg_match('/\s.*/', $data['search'], $surname)) and (!(preg_match('/.*/', $data['search'], $surname)))){
                 $surname = [0 => ''];
             }
+            // Находим автора по данным из поиска
             $authors = $this->getDoctrine()
             ->getRepository(Author::class)->findAuthor(trim($name[0]), trim($surname[0]));
         }
@@ -44,9 +49,10 @@ class AuthorController extends AbstractController
     /**
      * @Route("/addauthor", name="addauthor")
      */
-    public function add(Request $request, FormAuthorService $formAdd )
+    // Добавляет автора
+    public function add(Request $request, FormAuthorService $formBookService )
     {
-        // Создаем поля
+        // Создаем поля формы
         $form = $this->createForm(TestFormType::class);
         $form->add('name', TextType::class, array('label' => 'Имя'))
         ->add('surname', TextType::class, array('label' => 'Фамилия'));
@@ -54,13 +60,14 @@ class AuthorController extends AbstractController
         // Создаем форму
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
+            // Проверяем есть ли ошибка при создании формы и выводим ее если есть
             try {
-                $formAdd->create($form->getData(), $author);
+                $formBookService->create($form->getData(), $author);
                 return $this->redirect('/');
             }
             catch(\Exception $e) {
                 return $this->render('addAuthor/index.html.twig', array(
-                    'form' => $form->createView(), 'error' => 'Слишком короткая фамилия',
+                    'form' => $form->createView(), 'error' => $e->getMessage(),
                 ));
             }
         }
@@ -72,7 +79,8 @@ class AuthorController extends AbstractController
     /**
      * @Route("/changeauthor/{authorId}", name="changeauthor")
      */
-    public function change(int $authorId, Request $request, FormAuthorService $formAdd )
+    // Изменяет нужного автора
+    public function change(int $authorId, Request $request, FormAuthorService $formBookService )
     {
         // Получаем данные автора и создаем форму
         $author = $this->getDoctrine()
@@ -83,11 +91,11 @@ class AuthorController extends AbstractController
         ->add('surname', TextType::class, array('label' => 'Фамилия', 'attr' => array('value' => $author->getSurname())));
         // Создаем форму
         $form->handleRequest($request);
-        
         if ($form->isSubmitted()) {
             $data = $form->getData();
+            // Проверяем есть ли ошибка при создании формы и выводим ее если есть
             try {
-                $formAdd->create($form->getData(), $author);
+                $formBookService->create($form->getData(), $author);
                 return $this->redirect('/');
             }
             catch(\Exception $e) {

@@ -20,7 +20,7 @@ class AuthorRepository extends ServiceEntityRepository
     }
 
         public function findAuthor($name, $surname)
-    {
+    {       
             $entityManager = $this->getEntityManager();
             $query = $entityManager->createQuery(
             'SELECT a

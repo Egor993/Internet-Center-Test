@@ -10,16 +10,18 @@ use App\Form\TestFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\Authors;
 use App\Entity\Books;
-use Symfony\Component\Config\Definition\Exception\Exception;
+use App\Exception\FormException;
 
 class FormBookService extends AbstractController
 {
-    public function create(array $data, object  $book, object $author = null)
+    // Валидирует форму и создает ее
+    public function create(array $data, object  $book, object $author = null) : object
     {
-        // Устанвливаем данные из формы
+        // Создаем исключение, если дата > 2100 года
         if($data['date'] > 2100) {
-            throw new Exception();
+            throw new FormException('Слишком длинная дата');
         }
+        // Устанавливаем данные из формы
         $em = $this->getDoctrine()->getManager();
         if($author) {
             $book->setAuthor($author);
@@ -28,7 +30,8 @@ class FormBookService extends AbstractController
         $book->setBookDate($data['date']);
         $em->persist($book);
         $em->flush();
-        return true;
+        // Возвращаем объект модели
+        return $book;
     }
 
 }
