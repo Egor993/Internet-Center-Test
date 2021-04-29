@@ -16,7 +16,7 @@ use App\Exception\FormException;
 class FormAuthorService extends AbstractController
 {
     // Валидирует форму и создает ее
-    public function create(array $data, object $author)
+    public function create(array $data, object $author = null) : object
     {
         // Если фамилия < 3 символов - создаем исключение
         if(mb_strlen($data['surname']) < 3) {
@@ -28,7 +28,7 @@ class FormAuthorService extends AbstractController
         $author->setSurname($data['surname']);
         $em->persist($author);
         $em->flush();
-        return true;
+        return $author;
     }
 
 }

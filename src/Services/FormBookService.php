@@ -15,7 +15,7 @@ use App\Exception\FormException;
 class FormBookService extends AbstractController
 {
     // Валидирует форму и создает ее
-    public function create(array $data, object  $book, object $author = null) : object
+    public function create(array $data, object $book = null, object $author = null) : object
     {
         // Создаем исключение, если дата > 2100 года
         if($data['date'] > 2100) {

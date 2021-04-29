@@ -10,7 +10,6 @@ use App\Form\TestFormType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use App\Entity\Author;
 use App\Services\FormAuthorService;
-use Symfony\Component\HttpFoundation\JsonResponse;
 
 class AuthorController extends AbstractController
 {
